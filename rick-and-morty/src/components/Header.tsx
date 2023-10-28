@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Component, ReactNode } from 'react';
 import { COLORS } from '../constants/constants';
+import ErrorButton from './ErrorButton';
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -23,6 +24,7 @@ export default class Header extends Component<{ children: ReactNode }> {
   render() {
     return (
       <StyledHeader>
+        <ErrorButton />
         <Title>Rick and Morty</Title>
         {this.props.children}
       </StyledHeader>
