@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Component, ReactNode } from 'react';
+import { ReactNode } from 'react';
 
 const StyledMain = styled.main`
   width: 100%;
@@ -10,8 +10,6 @@ const StyledMain = styled.main`
   padding: 20px;
 `;
 
-export default class Main extends Component<{ children: ReactNode }> {
-  render() {
-    return <StyledMain>{this.props.children}</StyledMain>;
-  }
+export default function Main({ children }: { children: ReactNode }) {
+  return <StyledMain>{children}</StyledMain>;
 }

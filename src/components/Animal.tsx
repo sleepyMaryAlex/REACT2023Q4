@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Component } from 'react';
 import { IAnimal } from '../types/animal.type';
 import { COLORS } from '../constants/constants';
 import koala from '../assets/images/koala.png';
@@ -57,26 +56,24 @@ const Paragraph = styled.p`
   text-overflow: ellipsis;
 `;
 
-export default class Character extends Component<{
+export default function Animal({
+  animal: { name, earthAnimal, earthInsect },
+}: {
   animal: IAnimal;
-}> {
-  render() {
-    const { name, earthAnimal, earthInsect } = this.props.animal;
-
-    return (
-      <Box>
-        <Image src={koala} alt="koala" />
-        <Info>
-          <Name>{name}</Name>
-          <Description>
-            {earthAnimal && <Paragraph>Earth animal</Paragraph>}
-            {earthInsect && <Paragraph>Earth insect</Paragraph>}
-            {!earthAnimal && !earthInsect && (
-              <Paragraph>No description</Paragraph>
-            )}
-          </Description>
-        </Info>
-      </Box>
-    );
-  }
+}) {
+  return (
+    <Box>
+      <Image src={koala} alt="koala" />
+      <Info>
+        <Name>{name}</Name>
+        <Description>
+          {earthAnimal && <Paragraph>Earth animal</Paragraph>}
+          {earthInsect && <Paragraph>Earth insect</Paragraph>}
+          {!earthAnimal && !earthInsect && (
+            <Paragraph>No description</Paragraph>
+          )}
+        </Description>
+      </Info>
+    </Box>
+  );
 }

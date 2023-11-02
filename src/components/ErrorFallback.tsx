@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Component } from 'react';
 import { COLORS } from '../constants/constants';
 
 const Wrapper = styled.div`
@@ -10,12 +9,10 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-export default class ErrorFallback extends Component {
-  render() {
-    return (
-      <Wrapper>
-        <h2>Something went wrong</h2>
-      </Wrapper>
-    );
-  }
+export default function ErrorFallback() {
+  return (
+    <Wrapper>
+      <h2>Something went wrong</h2>
+    </Wrapper>
+  );
 }

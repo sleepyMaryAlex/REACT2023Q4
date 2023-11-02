@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Component, ReactNode } from 'react';
 import { COLORS } from '../constants/constants';
+import { ReactNode } from 'react';
 
 const StyledHeader = styled.header`
   width: 100%;
@@ -19,13 +19,11 @@ const Title = styled.h1`
   letter-spacing: 2px;
 `;
 
-export default class Header extends Component<{ children: ReactNode }> {
-  render() {
-    return (
-      <StyledHeader>
-        <Title>Animals</Title>
-        {this.props.children}
-      </StyledHeader>
-    );
-  }
+export default function Header({ children }: { children: ReactNode }) {
+  return (
+    <StyledHeader>
+      <Title>Animals</Title>
+      {children}
+    </StyledHeader>
+  );
 }

@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { Component } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
 import ResultPanel from './components/ResultPanel';
 import Animal from './components/Animal';
 import API from './api/api';
-import { IApp } from './types/app.interface';
 import { IAnimal } from './types/animal.type';
 import Loader from './components/Loader';
 
@@ -18,60 +17,50 @@ const Wrapper = styled.div`
   margin: 0 auto;
 `;
 
-export default class App extends Component<object, IApp> {
-  state = {
-    animals: [],
-    totalPages: 0,
-    totalElements: 0,
-    pageNumber: 1,
-    pageSize: 10,
-    isLoading: false,
-  };
+export default function App() {
+  const [animals, setAnimals] = useState<Readonly<IAnimal[]>>([]);
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [totalElements, setTotalElements] = useState<number>(0);
+  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  updateState = async () => {
-    const { pageNumber, pageSize } = this.state;
+  const updateState = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await API.get(
         `search?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
       const { animals, page } = response.data;
-      this.setState({
-        animals,
-        totalPages: page.totalPages,
-        totalElements: page.totalElements,
-        isLoading: false,
-      });
+      setAnimals(animals);
+      setTotalPages(page.totalPages);
+      setTotalElements(page.totalElements);
     } catch (error) {
-      this.setState({
-        animals: [],
-        totalPages: 0,
-        totalElements: 0,
-        isLoading: false,
-      });
+      setAnimals([]);
+      setTotalPages(0);
+      setTotalElements(0);
     }
-  };
+    setIsLoading(false);
+  }, [pageNumber, pageSize]);
 
-  componentDidMount(): void {
-    this.setState({ isLoading: true }, this.updateState);
-  }
+  useEffect(() => {
+    updateState();
+  }, [updateState]);
 
-  render() {
-    const { animals, totalPages, totalElements, isLoading } = this.state;
-    return (
-      <Wrapper>
-        <Header>
-          <ResultPanel totalPages={totalPages} totalElements={totalElements} />
-        </Header>
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <Main>
-            {animals.map((animal: IAnimal) => (
-              <Animal key={animal.uid} animal={animal} />
-            ))}
-          </Main>
-        )}
-      </Wrapper>
-    );
-  }
+  return (
+    <Wrapper>
+      <Header>
+        <ResultPanel totalPages={totalPages} totalElements={totalElements} />
+      </Header>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <Main>
+          {animals.map((animal: IAnimal) => (
+            <Animal key={animal.uid} animal={animal} />
+          ))}
+        </Main>
+      )}
+    </Wrapper>
+  );
 }

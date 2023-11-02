@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Component } from 'react';
 import { COLORS } from '../constants/constants';
 
 const Panel = styled.div`
@@ -14,23 +13,23 @@ const Title = styled.h3`
   color: ${COLORS.lightColor};
 `;
 
-export default class ResultPanel extends Component<{
+export default function ResultPanel({
+  totalPages,
+  totalElements,
+}: {
   totalPages: number;
   totalElements: number;
-}> {
-  render() {
-    const { totalPages, totalElements } = this.props;
-    return (
-      <Panel>
-        {totalElements ? (
-          <>
-            <Title>{totalElements} results</Title>
-            <Title>page 1/{totalPages}</Title>
-          </>
-        ) : (
-          <Title>No results</Title>
-        )}
-      </Panel>
-    );
-  }
+}) {
+  return (
+    <Panel>
+      {totalElements ? (
+        <>
+          <Title>{totalElements} results</Title>
+          <Title>page 1/{totalPages}</Title>
+        </>
+      ) : (
+        <Title>No results</Title>
+      )}
+    </Panel>
+  );
 }

@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { Component } from 'react';
 import { COLORS } from '../constants/constants';
 
 const rotate = keyframes`
@@ -83,20 +82,18 @@ const SmallCircle = styled(Circle)`
   }
 `;
 
-export default class Loader extends Component {
-  render() {
-    return (
-      <Overlay>
-        <Circles>
-          <Wrapper>
-            <LargeCircle>
-              <MiddleCircle>
-                <SmallCircle></SmallCircle>
-              </MiddleCircle>
-            </LargeCircle>
-          </Wrapper>
-        </Circles>
-      </Overlay>
-    );
-  }
+export default function Loader() {
+  return (
+    <Overlay>
+      <Circles>
+        <Wrapper>
+          <LargeCircle>
+            <MiddleCircle>
+              <SmallCircle></SmallCircle>
+            </MiddleCircle>
+          </LargeCircle>
+        </Wrapper>
+      </Circles>
+    </Overlay>
+  );
 }
