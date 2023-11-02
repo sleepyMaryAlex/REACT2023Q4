@@ -7,6 +7,7 @@ import Animal from './components/Animal';
 import API from './api/api';
 import { IAnimal } from './types/animal.type';
 import Loader from './components/Loader';
+import Pagination from './components/Pagination';
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,7 +23,7 @@ export default function App() {
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalElements, setTotalElements] = useState<number>(0);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [pageSize, setPageSize] = useState<number>(10);
+  const [pageSize] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const updateState = useCallback(async () => {
@@ -50,7 +51,16 @@ export default function App() {
   return (
     <Wrapper>
       <Header>
-        <ResultPanel totalPages={totalPages} totalElements={totalElements} />
+        <ResultPanel
+          totalPages={totalPages}
+          totalElements={totalElements}
+          pageNumber={pageNumber}
+        />
+        <Pagination
+          totalPages={totalPages}
+          pageNumber={pageNumber}
+          setPageNumber={setPageNumber}
+        />
       </Header>
       {isLoading ? (
         <Loader />

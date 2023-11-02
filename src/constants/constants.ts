@@ -4,4 +4,5 @@ export const COLORS = {
   darkColor: '#000',
   redBgColor: '#fddedb',
   blueBgColor: 'rgb(0 136 255)',
+  paleColor: '#9e9e9e',
 };

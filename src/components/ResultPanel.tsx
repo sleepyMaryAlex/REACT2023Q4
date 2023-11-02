@@ -16,16 +16,20 @@ const Title = styled.h3`
 export default function ResultPanel({
   totalPages,
   totalElements,
+  pageNumber,
 }: {
   totalPages: number;
   totalElements: number;
+  pageNumber: number;
 }) {
   return (
     <Panel>
       {totalElements ? (
         <>
           <Title>{totalElements} results</Title>
-          <Title>page 1/{totalPages}</Title>
+          <Title>
+            page {pageNumber}/{totalPages}
+          </Title>
         </>
       ) : (
         <Title>No results</Title>
