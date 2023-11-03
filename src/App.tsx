@@ -8,6 +8,8 @@ import API from './api/api';
 import { IAnimal } from './types/animal.type';
 import Loader from './components/Loader';
 import Pagination from './components/Pagination';
+import SearchBar from './components/SearchBar';
+import { useSearchParams } from 'react-router-dom';
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,14 +29,29 @@ export default function App() {
   );
   const [pageSize] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>(
+    localStorage.getItem('query') || ''
+  );
+  const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
+    setSearchParams(`search?page=${pageNumber}&query=${query}`);
     setIsLoading(true);
     async function fetchData() {
       try {
-        const response = await API.get(
-          `search?pageNumber=${pageNumber}&pageSize=${pageSize}`
-        );
+        const response = query
+          ? await API.post(
+              `search?pageNumber=${pageNumber - 1}&pageSize=${pageSize}`,
+              { name: query },
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              }
+            )
+          : await API.get(
+              `search?pageNumber=${pageNumber - 1}&pageSize=${pageSize}`
+            );
         const { animals, page } = response.data;
         setAnimals(animals);
         setTotalPages(page.totalPages);
@@ -47,11 +64,18 @@ export default function App() {
     }
     fetchData();
     setIsLoading(false);
-  }, [pageNumber, pageSize]);
+  }, [pageNumber, pageSize, query, setSearchParams]);
+
+  function handleSubmit(value: string): void {
+    setPageNumber(1);
+    setQuery(value);
+    localStorage.setItem('query', value);
+  }
 
   return (
     <Wrapper>
       <Header>
+        <SearchBar query={query} handleSubmit={handleSubmit} />
         <ResultPanel
           totalPages={totalPages}
           totalElements={totalElements}
