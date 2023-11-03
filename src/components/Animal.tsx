@@ -4,8 +4,7 @@ import { COLORS } from '../constants/constants';
 import koala from '../assets/images/koala.png';
 
 const Box = styled.div`
-  width: 550px;
-  height: 225px;
+  width: 280px;
   background-color: ${COLORS.darkBgColor};
   display: flex;
   flex-direction: row;
@@ -23,15 +22,14 @@ const Box = styled.div`
 `;
 
 const Image = styled.img`
-  width: 220px;
-  padding: 20px;
+  width: 100px;
+  padding: 10px;
 `;
 
 const Name = styled.h3`
   margin-bottom: 5px;
   letter-spacing: 1.5px;
-  font-size: 25px;
-  font-weight: 600;
+  font-weight: 500;
   font-family: 'Paytone One', sans-serif;
   white-space: nowrap;
   overflow: hidden;
@@ -39,7 +37,7 @@ const Name = styled.h3`
 `;
 
 const Info = styled.div`
-  padding: 20px;
+  padding: 10px;
   color: ${COLORS.lightColor};
   overflow: hidden;
 `;

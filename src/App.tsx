@@ -10,6 +10,7 @@ import Loader from './components/Loader';
 import Pagination from './components/Pagination';
 import SearchBar from './components/SearchBar';
 import { useSearchParams } from 'react-router-dom';
+import PageSizeSelect from './components/PageSizeSelect';
 
 const Wrapper = styled.div`
   display: flex;
@@ -27,7 +28,9 @@ export default function App() {
   const [pageNumber, setPageNumber] = useState<number>(
     Number(localStorage.getItem('pageNumber')) || 1
   );
-  const [pageSize] = useState<number>(10);
+  const [pageSize, setPageSize] = useState<number>(
+    Number(localStorage.getItem('pageSize')) || 10
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [query, setQuery] = useState<string>(
     localStorage.getItem('query') || ''
@@ -37,7 +40,9 @@ export default function App() {
   useEffect(() => {
     setIsLoading(true);
     setTotalPages(0);
-    setSearchParams(`search?page=${pageNumber}&query=${query}`);
+    setSearchParams(
+      `search?page=${pageNumber}&query=${query}&pageSize=${pageSize}`
+    );
     async function fetchData() {
       try {
         const response = query
@@ -74,6 +79,12 @@ export default function App() {
     localStorage.setItem('query', value);
   }
 
+  function handlePageSizeChange(value: number): void {
+    setPageNumber(1);
+    setPageSize(value);
+    localStorage.setItem('pageSize', String(value));
+  }
+
   return (
     <Wrapper>
       <Header>
@@ -83,11 +94,19 @@ export default function App() {
           totalElements={totalElements}
           pageNumber={pageNumber}
         />
-        <Pagination
-          totalPages={totalPages}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-        />
+        {totalPages !== 0 && (
+          <Pagination
+            totalPages={totalPages}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+          />
+        )}
+        {totalPages !== 0 && (
+          <PageSizeSelect
+            pageSize={pageSize}
+            handlePageSizeChange={handlePageSizeChange}
+          />
+        )}
       </Header>
       {isLoading ? (
         <Loader />

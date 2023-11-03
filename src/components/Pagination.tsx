@@ -39,47 +39,45 @@ export default function Pagination({
     localStorage.setItem('pageNumber', String(pageNumber));
   }, [pageNumber]);
 
-  {
-    return totalPages === 0 ? null : (
-      <Box>
-        <ControlButton
-          type="button"
-          onClick={() => setPageNumber(1)}
-          disabled={pageNumber === 1}
-        >
-          &#60;&#60;
-        </ControlButton>
-        <ControlButton
-          type="button"
-          onClick={() => {
-            if (pageNumber > 1) {
-              setPageNumber(pageNumber - 1);
-            }
-          }}
-          disabled={pageNumber === 1}
-        >
-          &#60;
-        </ControlButton>
-        <Button type="button">{pageNumber}</Button>
-        <ControlButton
-          type="button"
-          onClick={() => {
-            if (pageNumber < totalPages) {
-              setPageNumber(pageNumber + 1);
-            }
-          }}
-          disabled={pageNumber === totalPages}
-        >
-          &#62;
-        </ControlButton>
-        <ControlButton
-          type="button"
-          onClick={() => setPageNumber(totalPages)}
-          disabled={pageNumber === totalPages}
-        >
-          &#62;&#62;
-        </ControlButton>
-      </Box>
-    );
-  }
+  return (
+    <Box>
+      <ControlButton
+        type="button"
+        onClick={() => setPageNumber(1)}
+        disabled={pageNumber === 1}
+      >
+        &#60;&#60;
+      </ControlButton>
+      <ControlButton
+        type="button"
+        onClick={() => {
+          if (pageNumber > 1) {
+            setPageNumber(pageNumber - 1);
+          }
+        }}
+        disabled={pageNumber === 1}
+      >
+        &#60;
+      </ControlButton>
+      <Button type="button">{pageNumber}</Button>
+      <ControlButton
+        type="button"
+        onClick={() => {
+          if (pageNumber < totalPages) {
+            setPageNumber(pageNumber + 1);
+          }
+        }}
+        disabled={pageNumber === totalPages}
+      >
+        &#62;
+      </ControlButton>
+      <ControlButton
+        type="button"
+        onClick={() => setPageNumber(totalPages)}
+        disabled={pageNumber === totalPages}
+      >
+        &#62;&#62;
+      </ControlButton>
+    </Box>
+  );
 }
