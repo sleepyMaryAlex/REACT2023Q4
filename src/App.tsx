@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
 import ResultPanel from './components/ResultPanel';
@@ -22,31 +22,32 @@ export default function App() {
   const [animals, setAnimals] = useState<Readonly<IAnimal[]>>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
   const [totalElements, setTotalElements] = useState<number>(0);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageNumber, setPageNumber] = useState<number>(
+    Number(localStorage.getItem('pageNumber')) || 1
+  );
   const [pageSize] = useState<number>(10);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const updateState = useCallback(async () => {
+  useEffect(() => {
     setIsLoading(true);
-    try {
-      const response = await API.get(
-        `search?pageNumber=${pageNumber}&pageSize=${pageSize}`
-      );
-      const { animals, page } = response.data;
-      setAnimals(animals);
-      setTotalPages(page.totalPages);
-      setTotalElements(page.totalElements);
-    } catch (error) {
-      setAnimals([]);
-      setTotalPages(0);
-      setTotalElements(0);
+    async function fetchData() {
+      try {
+        const response = await API.get(
+          `search?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        );
+        const { animals, page } = response.data;
+        setAnimals(animals);
+        setTotalPages(page.totalPages);
+        setTotalElements(page.totalElements);
+      } catch (error) {
+        setAnimals([]);
+        setTotalPages(0);
+        setTotalElements(0);
+      }
     }
+    fetchData();
     setIsLoading(false);
   }, [pageNumber, pageSize]);
-
-  useEffect(() => {
-    updateState();
-  }, [updateState]);
 
   return (
     <Wrapper>

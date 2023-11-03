@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { COLORS } from '../constants/constants';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 const Box = styled.div`
   display: flex;
@@ -35,6 +36,13 @@ export default function Pagination({
   totalPages: number;
   setPageNumber: Dispatch<SetStateAction<number>>;
 }) {
+  const [, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    setSearchParams(`search?page=${pageNumber}`);
+    localStorage.setItem('pageNumber', String(pageNumber));
+  }, [pageNumber, setSearchParams]);
+
   return (
     <Box>
       <ControlButton
