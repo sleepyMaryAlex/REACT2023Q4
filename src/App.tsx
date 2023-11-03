@@ -35,8 +35,9 @@ export default function App() {
   const [, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setSearchParams(`search?page=${pageNumber}&query=${query}`);
     setIsLoading(true);
+    setTotalPages(0);
+    setSearchParams(`search?page=${pageNumber}&query=${query}`);
     async function fetchData() {
       try {
         const response = query
@@ -56,14 +57,15 @@ export default function App() {
         setAnimals(animals);
         setTotalPages(page.totalPages);
         setTotalElements(page.totalElements);
+        setIsLoading(false);
       } catch (error) {
         setAnimals([]);
         setTotalPages(0);
         setTotalElements(0);
+        setIsLoading(false);
       }
     }
     fetchData();
-    setIsLoading(false);
   }, [pageNumber, pageSize, query, setSearchParams]);
 
   function handleSubmit(value: string): void {

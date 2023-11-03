@@ -24,7 +24,7 @@ export default function ResultPanel({
 }) {
   return (
     <Panel>
-      {totalElements ? (
+      {totalPages ? (
         <>
           <Title>{totalElements} results</Title>
           <Title>

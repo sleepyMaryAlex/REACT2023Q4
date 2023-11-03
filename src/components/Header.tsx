@@ -4,6 +4,7 @@ import { ReactNode } from 'react';
 
 const StyledHeader = styled.header`
   width: 100%;
+  min-height: 305px;
   display: flex;
   flex-direction: column;
   align-items: center;

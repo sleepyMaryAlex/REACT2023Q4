@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 import { COLORS } from '../constants/constants';
 import { Dispatch, SetStateAction, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 const Box = styled.div`
   display: flex;
@@ -36,52 +35,51 @@ export default function Pagination({
   totalPages: number;
   setPageNumber: Dispatch<SetStateAction<number>>;
 }) {
-  const [, setSearchParams] = useSearchParams();
-
   useEffect(() => {
-    setSearchParams(`search?page=${pageNumber}`);
     localStorage.setItem('pageNumber', String(pageNumber));
-  }, [pageNumber, setSearchParams]);
+  }, [pageNumber]);
 
-  return (
-    <Box>
-      <ControlButton
-        type="button"
-        onClick={() => setPageNumber(1)}
-        disabled={pageNumber === 1}
-      >
-        &#60;&#60;
-      </ControlButton>
-      <ControlButton
-        type="button"
-        onClick={() => {
-          if (pageNumber > 1) {
-            setPageNumber(pageNumber - 1);
-          }
-        }}
-        disabled={pageNumber === 1}
-      >
-        &#60;
-      </ControlButton>
-      <Button type="button">{pageNumber}</Button>
-      <ControlButton
-        type="button"
-        onClick={() => {
-          if (pageNumber < totalPages) {
-            setPageNumber(pageNumber + 1);
-          }
-        }}
-        disabled={pageNumber === totalPages}
-      >
-        &#62;
-      </ControlButton>
-      <ControlButton
-        type="button"
-        onClick={() => setPageNumber(totalPages)}
-        disabled={pageNumber === totalPages}
-      >
-        &#62;&#62;
-      </ControlButton>
-    </Box>
-  );
+  {
+    return totalPages === 0 ? null : (
+      <Box>
+        <ControlButton
+          type="button"
+          onClick={() => setPageNumber(1)}
+          disabled={pageNumber === 1}
+        >
+          &#60;&#60;
+        </ControlButton>
+        <ControlButton
+          type="button"
+          onClick={() => {
+            if (pageNumber > 1) {
+              setPageNumber(pageNumber - 1);
+            }
+          }}
+          disabled={pageNumber === 1}
+        >
+          &#60;
+        </ControlButton>
+        <Button type="button">{pageNumber}</Button>
+        <ControlButton
+          type="button"
+          onClick={() => {
+            if (pageNumber < totalPages) {
+              setPageNumber(pageNumber + 1);
+            }
+          }}
+          disabled={pageNumber === totalPages}
+        >
+          &#62;
+        </ControlButton>
+        <ControlButton
+          type="button"
+          onClick={() => setPageNumber(totalPages)}
+          disabled={pageNumber === totalPages}
+        >
+          &#62;&#62;
+        </ControlButton>
+      </Box>
+    );
+  }
 }
