@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import { IAnimal } from '../types/animal.type';
 import { COLORS } from '../constants/constants';
 import koala from '../assets/images/koala.png';
+import { Dispatch, SetStateAction } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getAnimal } from '../api/results';
 
 const Box = styled.div`
   width: 280px;
@@ -14,6 +17,7 @@ const Box = styled.div`
   overflow: hidden;
   box-shadow: ${COLORS.darkBgColor} 0 20px 30px -10px;
   transition: box-shadow 0.5s;
+  cursor: pointer;
 
   &:hover {
     box-shadow: ${COLORS.darkBgColor} 0 20px 90px -20px,
@@ -55,12 +59,27 @@ const Paragraph = styled.p`
 `;
 
 export default function Animal({
-  animal: { name, earthAnimal, earthInsect },
+  animal: { name, earthAnimal, earthInsect, uid },
+  setDetails,
+  setIsLoading,
 }: {
   animal: IAnimal;
+  setDetails: Dispatch<SetStateAction<IAnimal | null>>;
+  setIsLoading: Dispatch<SetStateAction<boolean>>;
 }) {
+  const navigate = useNavigate();
+
+  async function handleClick(): Promise<void> {
+    setIsLoading(true);
+    const response = await getAnimal(uid);
+    setDetails(response.data.animal);
+    localStorage.setItem('details', JSON.stringify(response.data.animal));
+    navigate(`/details/${uid}`);
+    setIsLoading(false);
+  }
+
   return (
-    <Box>
+    <Box onClick={handleClick}>
       <Image src={koala} alt="koala" />
       <Info>
         <Name>{name}</Name>

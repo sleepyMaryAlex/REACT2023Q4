@@ -3,7 +3,6 @@ import { COLORS } from '../constants/constants';
 import { ReactNode } from 'react';
 
 const StyledHeader = styled.header`
-  width: 100%;
   min-height: 360px;
   display: flex;
   flex-direction: column;

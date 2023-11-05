@@ -20,6 +20,7 @@ const Overlay = styled.div`
   text-align: center;
   display: flex;
   align-items: center;
+  background-color: ${COLORS.semitransparentColor};
 `;
 
 const Circles = styled.div`

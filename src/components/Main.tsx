@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { ReactNode } from 'react';
+import Loader from './Loader';
 
 const StyledMain = styled.main`
-  width: 100%;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
@@ -10,6 +10,12 @@ const StyledMain = styled.main`
   padding: 20px;
 `;
 
-export default function Main({ children }: { children: ReactNode }) {
-  return <StyledMain>{children}</StyledMain>;
+export default function Main({
+  children,
+  isLoading,
+}: {
+  children: ReactNode;
+  isLoading: boolean;
+}) {
+  return isLoading ? <Loader /> : <StyledMain>{children}</StyledMain>;
 }
