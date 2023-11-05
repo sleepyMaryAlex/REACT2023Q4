@@ -1,0 +1,58 @@
+@import 'https://fonts.googleapis.com/css2?family=Inconsolata:wght@300;400;500&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Paytone+One&display=swap';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+select {
+  outline: none;
+  appearance: none;
+  border: none;
+}
+
+input[type='text'] {
+  outline: none;
+  border: none;
+}
+
+button {
+  border: none;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+  background-color: #3c3e44;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #202329;
+  border-radius: 9em;
+  box-shadow: inset 1px 1px 10px #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #202329;
+}
+
+body {
+  font-family: Inconsolata, monospace;
+}
+
+@media (max-width: 1020px) {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+}
