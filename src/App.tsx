@@ -1,24 +1,31 @@
 import styled from 'styled-components';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
 import ResultPanel from './components/ResultPanel';
 import Animal from './components/Animal';
-import API from './api/api';
 import { IAnimal } from './types/animal.type';
-import Loader from './components/Loader';
 import Pagination from './components/Pagination';
 import SearchBar from './components/SearchBar';
-import { useSearchParams } from 'react-router-dom';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import PageSizeSelect from './components/PageSizeSelect';
+import { ContextType } from './types/context.type';
+import Overlay from './components/Overlay';
+import { getAnimals, getAnimalsByQuery } from './api/results';
 
 const Wrapper = styled.div`
+  max-width: 1680px;
+  min-height: 100vh;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+`;
+
+const Box = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  max-width: 1680px;
-  margin: 0 auto;
+  position: relative;
 `;
 
 export default function App() {
@@ -35,29 +42,26 @@ export default function App() {
   const [query, setQuery] = useState<string>(
     localStorage.getItem('query') || ''
   );
+  const [details, setDetails] = useState<IAnimal | null>(
+    JSON.parse(localStorage.getItem('details') as string) || null
+  );
   const [, setSearchParams] = useSearchParams();
+  const fnRef = useRef(setSearchParams);
+  const stableFn = useCallback((value: string) => fnRef.current(value), []);
 
   useEffect(() => {
     setIsLoading(true);
     setTotalPages(0);
-    setSearchParams(
-      `search?page=${pageNumber}&query=${query}&pageSize=${pageSize}`
+    stableFn(
+      query
+        ? `/search?page=${pageNumber}&query=${query}&pageSize=${pageSize}`
+        : `/search?page=${pageNumber}&pageSize=${pageSize}`
     );
     async function fetchData() {
       try {
         const response = query
-          ? await API.post(
-              `search?pageNumber=${pageNumber - 1}&pageSize=${pageSize}`,
-              { name: query },
-              {
-                headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-                },
-              }
-            )
-          : await API.get(
-              `search?pageNumber=${pageNumber - 1}&pageSize=${pageSize}`
-            );
+          ? await getAnimalsByQuery(pageNumber, pageSize, query)
+          : await getAnimals(pageNumber, pageSize);
         const { animals, page } = response.data;
         setAnimals(animals);
         setTotalPages(page.totalPages);
@@ -71,7 +75,7 @@ export default function App() {
       }
     }
     fetchData();
-  }, [pageNumber, pageSize, query, setSearchParams]);
+  }, [pageNumber, pageSize, query, stableFn]);
 
   function handleSubmit(value: string): void {
     setPageNumber(1);
@@ -87,36 +91,41 @@ export default function App() {
 
   return (
     <Wrapper>
-      <Header>
-        <SearchBar query={query} handleSubmit={handleSubmit} />
-        <ResultPanel
-          totalPages={totalPages}
-          totalElements={totalElements}
-          pageNumber={pageNumber}
-        />
-        {totalPages !== 0 && (
-          <Pagination
+      <Box>
+        {details && <Overlay setDetails={setDetails} />}
+        <Header>
+          <SearchBar query={query} handleSubmit={handleSubmit} />
+          <ResultPanel
             totalPages={totalPages}
+            totalElements={totalElements}
             pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
           />
-        )}
-        {totalPages !== 0 && (
-          <PageSizeSelect
-            pageSize={pageSize}
-            handlePageSizeChange={handlePageSizeChange}
-          />
-        )}
-      </Header>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <Main>
+          {totalPages && (
+            <Pagination
+              totalPages={totalPages}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
+            />
+          )}
+          {totalPages && (
+            <PageSizeSelect
+              pageSize={pageSize}
+              handlePageSizeChange={handlePageSizeChange}
+            />
+          )}
+        </Header>
+        <Main isLoading={isLoading}>
           {animals.map((animal: IAnimal) => (
-            <Animal key={animal.uid} animal={animal} />
+            <Animal
+              key={animal.uid}
+              animal={animal}
+              setDetails={setDetails}
+              setIsLoading={setIsLoading}
+            />
           ))}
         </Main>
-      )}
+      </Box>
+      <Outlet context={{ details, setDetails } satisfies ContextType} />
     </Wrapper>
   );
 }
